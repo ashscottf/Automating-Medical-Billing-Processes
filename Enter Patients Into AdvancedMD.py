@@ -3,7 +3,6 @@
 #This code cannot be used to sell or make money with in any way, shape, or form.
 ##############################################
 
-
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
