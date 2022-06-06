@@ -27,7 +27,7 @@ from openpyxl import load_workbook
 from time import sleep
 from Patient import Patient
 
-#The reason there is a Debug Mode is i puorpusefuly dealys between each key being typed when i send input to a form input so i would not look like a bot, but this just takes for ever to debug.
+#The reason there is a Debug Mode is i puorpusefuly added dealys between each key being typed when i send input to a form input so i would not look like a bot, but this just takes for ever to debug.
 IsInDebugMode = False
 
 AleartWaitTime = 0.2
