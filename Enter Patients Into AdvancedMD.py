@@ -22,6 +22,7 @@ from openpyxl import load_workbook
 from time import sleep
 from Patient import Patient
 
+#The reason there is a Debug Mode is i puorpusefuly dealys between each key being typed when i send input to a form input so i would not look like a bot, but this just takes for ever to debug.
 IsInDebugMode = False
 
 AleartWaitTime = 0.2
@@ -29,12 +30,50 @@ AleartWaitTime = 0.2
 delay = 30
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
+
+def CheckForPopups():
+   
+   #checking multiple times because sometimes there are multiple popups
+   try:
+         sleep(AleartWaitTime)
+         driver.switch_to_alert().accept()
+     except:
+         print()
+     try:
+         sleep(AleartWaitTime)
+         driver.switch_to_alert().accept()
+     except:
+         print()
+     try:
+         sleep(AleartWaitTime)
+         driver.switch_to_alert().accept()
+     except:
+         print()
+     try:
+         sleep(AleartWaitTime)
+         driver.switch_to_alert().accept()
+     except:
+         print()
+     try:
+         sleep(AleartWaitTime)
+         driver.switch_to_alert().accept()
+     except:
+         print()
+     try:
+         sleep(AleartWaitTime)
+         driver.switch_to_alert().accept()
+     except:
+         print()
 def SavePatient():
-   elem = driver.find_element_by_xpath("/html/body") # href link
+   #This might look a little weired but the software would not allow us to just click the save button to save the patients, it made you use the shortcut ALT + A to save. so i had to get kind of clever and send the keys Alt and A to the body element of the page for it to work
+   elem = driver.find_element_by_xpath("/html/body")
    elem.send_keys(Keys.ALT, "a") 
 def ClearForm():
-   elem = driver.find_element_by_xpath("/html/body") # href link
+   #Again this might look a little weired but as i said before the software would not allow us to just click the clear button to clear the form, it made you use the shortcut ALT + L to clear the form. so i had to get kind of clever and send the keys Alt and L  to the body element of the page for it to work
+   elem = driver.find_element_by_xpath("/html/body")
    elem.send_keys(Keys.ALT, "l") 
+#This function is here so if the it takes a little bit longer to load, my code dose not fail
+#i do this by just trying to find the element i want and then seeing if there is an error or not. if so i try it again... until eventualy it works.
 def WaitForElement(Element, FindBy):
         IsLoaded = False
         while IsLoaded == False:
@@ -67,6 +106,8 @@ def WaitForElement(Element, FindBy):
                     break
                 except:
                     continue
+                     
+#This is here because there was a diffrent way you had to login to the software when you where entering the patients "Personal Data" Like Street Address, Email Address, DOB; insted of just entering the Patients Insurance Information like their Insurance Policy Number. 
 def LoginForPersnalData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
     driver.switch_to.frame(0)
@@ -85,6 +126,8 @@ def LoginForPersnalData(username, password, officeKey):
     driver.switch_to.frame(0)
     sleep(6)
     driver.switch_to.frame(0)
+      
+ # As i said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entireing patient personal data, or insurance information
 def LoginForInsuranceData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
 
@@ -104,22 +147,9 @@ def LoginForInsuranceData(username, password, officeKey):
     driver.switch_to.frame(0)
     WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.XPATH, '//*[@id="cdk-drop-list-0"]/div[4]'))).click()
     driver.switch_to.frame(0)
+#this function is what actually enters the patients personal information into the form
 def EnterNewPatientPersnoal(patient):
-    try:
-        driver.implicitly_WebDriverWait(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-       print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
+   CheckForPopups()
     if len(patient.PatientZipCode.strip()) == 4:
         patient.PatientZipCode = ("0" + patient.PatientZipCode)
     #Clearing The Form And Makeing Sure It Is In The Patint Info Tab
@@ -155,36 +185,10 @@ def EnterNewPatientPersnoal(patient):
     PatientDOB_Input.send_keys(patient.PatientDOB)
     sleep(AleartWaitTime)
     driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ALT, "a")
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
+      
+    CheckForPopups()
+
+#This function enters the patients Insurance Data
 def EnterNewPatientInsurance(patient):
     print(patient.PatientFullName)
 
@@ -211,39 +215,14 @@ def EnterNewPatientInsurance(patient):
     Carrier_Input.clear()
     EffectiveDate_Input.clear()
 
-    #Filling Out The Form
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-       print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
+    CheckForPopups()
+   
     Carrier_Input.send_keys(patient.Carrier, Keys.TAB)
+    #Waiting For The Carrier Input To Load
     sleep(1)
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-       print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
+    CheckForPopups()
+         
+    #Filling Out The Form
     SubscriberID_Input.send_keys(patient.PatientInsID)
     EffectiveDate_Input.send_keys("01012020")
     sleep(0.3)
@@ -251,21 +230,9 @@ def EnterNewPatientInsurance(patient):
     ActionChains(driver).key_down(Keys.ALT).send_keys('a').key_up(Keys.ALT).perform()
     sleep(0.3)
     
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-       print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
-    try:
-        sleep(AleartWaitTime)
-        driver.switch_to_alert().accept()
-    except:
-        print()
+   CheckForPopups()
+         
+ #sometimes it is neccasary to actually delete patients, thats what this function dose
 def DeletePatient(patient):
     driver.switch_to.parent_frame()
     #Searching For Patient 
@@ -283,36 +250,9 @@ def DeletePatient(patient):
         sleep(0.2)
         driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ALT, "t")
         sleep(0.2)
-        try:
-            sleep(AleartWaitTime)
-            driver.switch_to_alert().accept()
-        except:
-            print()
-        try:
-            sleep(AleartWaitTime)
-            driver.switch_to_alert().accept()
-        except:
-            print()
-        try:
-            sleep(AleartWaitTime)
-            driver.switch_to_alert().accept()
-        except:
-            print()
-        try:
-            sleep(AleartWaitTime)
-            driver.switch_to_alert().accept()
-        except:
-            print()
-        try:
-            sleep(AleartWaitTime)
-            driver.switch_to_alert().accept()
-        except:
-            print()
-        try:
-            sleep(AleartWaitTime)
-            driver.switch_to_alert().accept()
-        except:
-            print()
+      
+       CheckForPopups()
+        
     except:
         element = driver.find_element(By.XPATH, '/html/body/div[3]/div[2]')
         driver.execute_script("""
@@ -323,6 +263,7 @@ def DeletePatient(patient):
         driver.find_element(By.XPATH, '/html/body/amds-root/div/amds-layout/mat-drawer-container/mat-drawer-content/amds-header-toolbar/mat-toolbar/div[1]/amds-patient-lookup-control/div/mat-form-field/div/div[1]/div[3]/button[1]').click()
         driver.switch_to.frame(0)
         return
+#This is the main function that gets the paitents information from an Excel Spreadsheet and the Enters that info into AdvancedMD
 def EnterPatientsFromList(PatientListFileName, username, password, officeKey, IsEnteringForPatientPersonalData=True, SheetName='Sheet1', StartAt=2, IsClearingPatients=False):
     if IsClearingPatients:
         LoginForPersnalData(username, password, officeKey)
