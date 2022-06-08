@@ -43,32 +43,32 @@ def CheckForPopups():
          sleep(AleartWaitTime)
          driver.switch_to_alert().accept()
      except:
-         print()
+         pass
      try:
          sleep(AleartWaitTime)
          driver.switch_to_alert().accept()
      except:
-         print()
+         pass
      try:
          sleep(AleartWaitTime)
          driver.switch_to_alert().accept()
      except:
-         print()
+         pass
      try:
          sleep(AleartWaitTime)
          driver.switch_to_alert().accept()
      except:
-         print()
+         pass
      try:
          sleep(AleartWaitTime)
          driver.switch_to_alert().accept()
      except:
-         print()
+         pass
      try:
          sleep(AleartWaitTime)
          driver.switch_to_alert().accept()
      except:
-         print()
+         pass
 def SavePatient():
    #This might look a little weired but the software would not allow us to just click the save button to save the patients, it made you use the shortcut ALT + A to save. so i had to get kind of clever and send the keys Alt and A to the body element of the page for it to work
    elem = driver.find_element_by_xpath("/html/body")
