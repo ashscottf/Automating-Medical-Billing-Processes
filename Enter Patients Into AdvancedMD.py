@@ -36,49 +36,17 @@ def CheckForPopups(AmountToCheckForPopups=5):
          driver.switch_to_alert().accept()
       except:
          pass
+      
 def SavePatient():
    #This might look a little weired but the software would not allow us to just click the save button to save the patients, it made you use the shortcut ALT + A to save. so I had to get kind of clever and send the keys Alt and A to the body element of the page for it to work
    elem = driver.find_element_by_xpath("/html/body")
-   elem.send_keys(Keys.ALT, "a") 
+   elem.send_keys(Keys.ALT, "a")
+   
 def ClearForm():
    #Again this might look a little weired but as I said before the software would not allow us to just click the clear button to clear the form, it made you use the shortcut ALT + L to clear the form. so I had to get kind of clever and send the keys Alt and L to the body element of the page for it to work
    elem = driver.find_element_by_xpath("/html/body")
    elem.send_keys(Keys.ALT, "l") 
-#This function is here so if it takes a little bit longer to load, my code does not fail
-#i do this by just trying to find the element I want and then seeing if there is an error or not. if it errors out, I try it again... until eventualy it works.
-def WaitForElement(Element, FindBy):
-        IsLoaded = False
-        while IsLoaded == False:
-
-            if FindBy.upper() == "ID":
-                 try:
-                        driver.find_element(By.ID, str(Element))
-                        IsLoaded = True
-                        break
-                 except:
-                    continue
-            elif FindBy.upper() == "XPATH":
-                try:
-                        driver.find_element(By.XPATH, str(Element))
-                        IsLoaded = True
-                        break
-                except:
-                    continue
-            elif FindBy.upper() == "CSS":
-                try:
-                        driver.find_element(By.CSS_SELECTOR,str(Element))
-                        IsLoaded = True
-                        break
-                except:
-                    continue
-            elif FindBy.upper() == "NAME":
-                try:
-                    driver.find_element(By.Name,str(Element))
-                    IsLoaded = True
-                    break
-                except:
-                    continue
-                     
+   
 #This is here because there was a diffrent way you had to login to the software when you where entering the patients "Personal Data" Like Street Address, Email Address, DOB; instead of just entering the Patients Insurance Information like their Insurance Policy Number. 
 def LoginForPersonalData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
@@ -119,6 +87,7 @@ def LoginForInsuranceData(username, password, officeKey):
     driver.switch_to.frame(0)
     WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.XPATH, '//*[@id="cdk-drop-list-0"]/div[4]'))).click()
     driver.switch_to.frame(0)
+   
 #This function is what actually enters the patients personal information into the form.
 def EnterNewPatientPersonal(patient):
    CheckForPopups()
@@ -235,6 +204,7 @@ def DeletePatient(patient):
         driver.find_element(By.XPATH, '/html/body/amds-root/div/amds-layout/mat-drawer-container/mat-drawer-content/amds-header-toolbar/mat-toolbar/div[1]/amds-patient-lookup-control/div/mat-form-field/div/div[1]/div[3]/button[1]').click()
         driver.switch_to.frame(0)
         return
+   
 #This is the main function that gets the patients information from an Excel Spreadsheet and then enters that info into AdvancedMD
 def EnterPatientsFromList(PatientListFileName, username, password, officeKey, IsEnteringForPatientPersonalData=True, SheetName='Sheet1', StartAt=2, IsClearingPatients=False):
     if IsClearingPatients:
