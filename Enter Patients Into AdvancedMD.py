@@ -30,7 +30,7 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 def CheckForPopups(AmountToCheckForPopups=5):
    
    #Checking multiple times because sometimes there are multiple popups
-   for _ in range(0, AmountToCheckForPopups)
+   for _ in range(0, AmountToCheckForPopups):
       try:
          sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
