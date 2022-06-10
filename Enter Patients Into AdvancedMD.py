@@ -18,7 +18,7 @@ from openpyxl import load_workbook
 from time import sleep
 from Patient import Patient
 
-#The reason there is a Debug Mode is I purposely added delays between each key being typed when I send input to a form input so I would not look like a bot, but this just takes forever to debug, and when this is set to True it only dose the first 2 rows in the Excel Spreadsheet
+#The reason there is a Debug Mode is I purposely added delays between each key being typed when I send input to a form input so I would not look like a bot, but this just takes forever to debug, and when this is set to True it only does the first 2 rows in the Excel Spreadsheet
 IsInDebugMode = False
 
 AlertWaitTime = 0.2
@@ -67,7 +67,7 @@ def LoginForPersonalData(username, password, officeKey):
     sleep(6)
     driver.switch_to.frame(0)
       
- # As i said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entiring patient personal data, or insurance information.
+ # As I said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entiring patient personal data, or insurance information.
 def LoginForInsuranceData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
 
