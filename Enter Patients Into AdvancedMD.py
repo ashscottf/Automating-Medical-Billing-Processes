@@ -18,7 +18,7 @@ from openpyxl import load_workbook
 from time import sleep
 from Patient import Patient
 
-#The reason there is a Debug Mode is I purposely added dealys between each key being typed when I send input to a form input so I would not look like a bot, but this just takes forever to debug
+#The reason there is a Debug Mode is I purposely added delays between each key being typed when I send input to a form input so I would not look like a bot, but this just takes forever to debug, and when this is set to True it only dose the first 2 rows in the Excel Spreadsheet
 IsInDebugMode = False
 
 AlertWaitTime = 0.2
@@ -37,15 +37,15 @@ def CheckForPopups(AmountToCheckForPopups=5):
       except:
          pass
 def SavePatient():
-   #This might look a little weired but the software would not allow us to just click the save button to save the patients, it made you use the shortcut ALT + A to save. so i had to get kind of clever and send the keys Alt and A to the body element of the page for it to work
+   #This might look a little weired but the software would not allow us to just click the save button to save the patients, it made you use the shortcut ALT + A to save. so I had to get kind of clever and send the keys Alt and A to the body element of the page for it to work
    elem = driver.find_element_by_xpath("/html/body")
    elem.send_keys(Keys.ALT, "a") 
 def ClearForm():
-   #Again this might look a little weired but as i said before the software would not allow us to just click the clear button to clear the form, it made you use the shortcut ALT + L to clear the form. so i had to get kind of clever and send the keys Alt and L  to the body element of the page for it to work
+   #Again this might look a little weired but as I said before the software would not allow us to just click the clear button to clear the form, it made you use the shortcut ALT + L to clear the form. so I had to get kind of clever and send the keys Alt and L to the body element of the page for it to work
    elem = driver.find_element_by_xpath("/html/body")
    elem.send_keys(Keys.ALT, "l") 
 #This function is here so if it takes a little bit longer to load, my code does not fail
-#i do this by just trying to find the element i want and then seeing if there is an error or not. if so i try it again... until eventualy it works.
+#i do this by just trying to find the element I want and then seeing if there is an error or not. if it errors out, I try it again... until eventualy it works.
 def WaitForElement(Element, FindBy):
         IsLoaded = False
         while IsLoaded == False:
@@ -79,7 +79,7 @@ def WaitForElement(Element, FindBy):
                 except:
                     continue
                      
-#This is here because there was a diffrent way you had to login to the software when you where entering the patients "Personal Data" Like Street Address, Email Address, DOB; insted of just entering the Patients Insurance Information like their Insurance Policy Number. 
+#This is here because there was a diffrent way you had to login to the software when you where entering the patients "Personal Data" Like Street Address, Email Address, DOB; instead of just entering the Patients Insurance Information like their Insurance Policy Number. 
 def LoginForPersonalData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
     driver.switch_to.frame(0)
@@ -99,7 +99,7 @@ def LoginForPersonalData(username, password, officeKey):
     sleep(6)
     driver.switch_to.frame(0)
       
- # As i said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entiring patient personal data, or insurance information
+ # As i said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entiring patient personal data, or insurance information.
 def LoginForInsuranceData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
 
@@ -119,12 +119,12 @@ def LoginForInsuranceData(username, password, officeKey):
     driver.switch_to.frame(0)
     WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.XPATH, '//*[@id="cdk-drop-list-0"]/div[4]'))).click()
     driver.switch_to.frame(0)
-#this function is what actually enters the patients personal information into the form
+#This function is what actually enters the patients personal information into the form.
 def EnterNewPatientPersonal(patient):
    CheckForPopups()
     if len(patient.PatientZipCode.strip()) == 4:
         patient.PatientZipCode = ("0" + patient.PatientZipCode)
-    #Clearing The Form And Makeing Sure It Is In The Patint Info Tab
+    #Clearing The Form And Making Sure It Is In The Patint Info Tab
     WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.TAG_NAME, "body"))).send_keys(Keys.ALT, "l")
 
     #Creating Varibles For Elements On Patient Information Page
@@ -155,7 +155,7 @@ def EnterNewPatientPersonal(patient):
     PatientAccountNumberInput.send_keys(patient.PatientAccountNumber)
     Gender_Dropdown.click()
     PatientDOB_Input.send_keys(patient.PatientDOB)
-    sleep(AleartWaitTime)
+    sleep(AlertWaitTime)
     driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ALT, "a")
       
     CheckForPopups()
@@ -204,7 +204,7 @@ def EnterNewPatientInsurance(patient):
     
    CheckForPopups()
          
- #sometimes it is neccasary to actually delete patients, thats what this function dose
+ #Sometimes it is neccasary to actually delete patients, thats what this function does
 def DeletePatient(patient):
     driver.switch_to.parent_frame()
     #Searching For Patient 
@@ -243,9 +243,7 @@ def EnterPatientsFromList(PatientListFileName, username, password, officeKey, Is
         ws = book[SheetName]
         rows = ws.iter_rows(min_row=2, min_col=1, max_col=2)
         for FullName, Blank in rows:
-            #NewPatient = Patient(" ", " ", " ", " ", " ", " ", "(XXX) XXX-XXXX", " ", " ", "COMMERCIAL", " ", " ", " ")
             print("'" + FullName.value + "'")
-            #NewPatient = Patient(FirstName.value, LastName.value, Gender.value, DOB.value, Email.value, PrimaryPhone.value, "(XXX) XXX-XXXX", StreetAddrs.value, ZipCode.value, "COMMERCIAL", InsuranceID.value, AccountNumber.value, Carrier.value)
             DeletePatient(FullName.value)
         driver.close()
     elif IsEnteringForPatientPersonalData:
