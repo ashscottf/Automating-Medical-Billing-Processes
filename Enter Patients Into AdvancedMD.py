@@ -20,9 +20,8 @@ from Patient import Patient
 
 #The reason there is a Debug Mode is I purposely added delays between each key being typed when I send input to a form input so I would not look like a bot, but this just takes forever to debug, and when this is set to True it only does the first 2 rows in the Excel Spreadsheet
 IsInDebugMode = False
-
+AdvancedMDLoginUrl = "https://login.advancedmd.com/"
 AlertWaitTime = 0.2
-
 delay = 30
 
 driver = webdriver.Chrome(ChromeDriverManager().install())
@@ -49,7 +48,7 @@ def ClearForm():
    
 #This is here because there was a diffrent way you had to login to the software when you where entering the patients "Personal Data" Like Street Address, Email Address, DOB; instead of just entering the Patients Insurance Information like their Insurance Policy Number. 
 def LoginForPersonalData(username, password, officeKey):
-    driver.get("https://login.advancedmd.com/")
+    driver.get(AdvancedMDLoginUrl)
     driver.switch_to.frame(0)
     driver.find_element(By.NAME, "loginname").send_keys(username)
     driver.find_element(By.NAME, "password").send_keys(password)
@@ -69,7 +68,7 @@ def LoginForPersonalData(username, password, officeKey):
       
  # As I said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entiring patient personal data, or insurance information.
 def LoginForInsuranceData(username, password, officeKey):
-    driver.get("https://login.advancedmd.com/")
+    driver.get(AdvancedMDLoginUrl)
 
     driver.switch_to.frame(0)
     driver.find_element(By.NAME, "loginname").send_keys(username)
@@ -90,7 +89,7 @@ def LoginForInsuranceData(username, password, officeKey):
    
 #This function is what actually enters the patients personal information into the form.
 def EnterNewPatientPersonal(patient):
-   CheckForPopups()
+    CheckForPopups()
     if len(patient.PatientZipCode.strip()) == 4:
         patient.PatientZipCode = ("0" + patient.PatientZipCode)
     #Clearing The Form And Making Sure It Is In The Patint Info Tab
@@ -171,7 +170,7 @@ def EnterNewPatientInsurance(patient):
     ActionChains(driver).key_down(Keys.ALT).send_keys('a').key_up(Keys.ALT).perform()
     sleep(0.3)
     
-   CheckForPopups()
+    CheckForPopups()
          
  #Sometimes it is neccasary to actually delete patients, thats what this function does
 def DeletePatient(patient):
@@ -192,7 +191,7 @@ def DeletePatient(patient):
         driver.find_element(By.TAG_NAME, "body").send_keys(Keys.ALT, "t")
         sleep(0.2)
       
-       CheckForPopups()
+        CheckForPopups()
         
     except:
         element = driver.find_element(By.XPATH, '/html/body/div[3]/div[2]')
