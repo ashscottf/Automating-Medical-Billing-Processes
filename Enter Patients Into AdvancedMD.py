@@ -18,10 +18,10 @@ from openpyxl import load_workbook
 from time import sleep
 from Patient import Patient
 
-#The reason there is a Debug Mode is i puorpusefuly added dealys between each key being typed when i send input to a form input so i would not look like a bot, but this just takes for ever to debug.
+#The reason there is a Debug Mode is I purposely added dealys between each key being typed when I send input to a form input so I would not look like a bot, but this just takes forever to debug
 IsInDebugMode = False
 
-AleartWaitTime = 0.2
+AlertWaitTime = 0.2
 
 delay = 30
 
@@ -29,34 +29,34 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 
 def CheckForPopups():
    
-   #checking multiple times because sometimes there are multiple popups
+   #Checking multiple times because sometimes there are multiple popups
    try:
-         sleep(AleartWaitTime)
+         sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
      except:
          pass
      try:
-         sleep(AleartWaitTime)
+         sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
      except:
          pass
      try:
-         sleep(AleartWaitTime)
+         sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
      except:
          pass
      try:
-         sleep(AleartWaitTime)
+         sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
      except:
          pass
      try:
-         sleep(AleartWaitTime)
+         sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
      except:
          pass
      try:
-         sleep(AleartWaitTime)
+         sleep(AlertWaitTime)
          driver.switch_to_alert().accept()
      except:
          pass
@@ -68,7 +68,7 @@ def ClearForm():
    #Again this might look a little weired but as i said before the software would not allow us to just click the clear button to clear the form, it made you use the shortcut ALT + L to clear the form. so i had to get kind of clever and send the keys Alt and L  to the body element of the page for it to work
    elem = driver.find_element_by_xpath("/html/body")
    elem.send_keys(Keys.ALT, "l") 
-#This function is here so if the it takes a little bit longer to load, my code dose not fail
+#This function is here so if it takes a little bit longer to load, my code does not fail
 #i do this by just trying to find the element i want and then seeing if there is an error or not. if so i try it again... until eventualy it works.
 def WaitForElement(Element, FindBy):
         IsLoaded = False
@@ -104,7 +104,7 @@ def WaitForElement(Element, FindBy):
                     continue
                      
 #This is here because there was a diffrent way you had to login to the software when you where entering the patients "Personal Data" Like Street Address, Email Address, DOB; insted of just entering the Patients Insurance Information like their Insurance Policy Number. 
-def LoginForPersnalData(username, password, officeKey):
+def LoginForPersonalData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
     driver.switch_to.frame(0)
     driver.find_element(By.NAME, "loginname").send_keys(username)
@@ -116,14 +116,14 @@ def LoginForPersnalData(username, password, officeKey):
     driver.minimize_window()
     driver.switch_to.window(window_after)
     driver.maximize_window()
-    sleep(AleartWaitTime)
+    sleep(AlertWaitTime)
     WebDriverWait(driver, delay).until(EC.element_to_be_clickable((By.ID, 'mnuPatientInfo'))).click()
-    sleep(AleartWaitTime)
+    sleep(AlertWaitTime)
     driver.switch_to.frame(0)
     sleep(6)
     driver.switch_to.frame(0)
       
- # As i said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entireing patient personal data, or insurance information
+ # As i said in the previous comment this is here because there was a diffrent way you had to login to the medical billing software depending on if you where entiring patient personal data, or insurance information
 def LoginForInsuranceData(username, password, officeKey):
     driver.get("https://login.advancedmd.com/")
 
@@ -144,7 +144,7 @@ def LoginForInsuranceData(username, password, officeKey):
     WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.XPATH, '//*[@id="cdk-drop-list-0"]/div[4]'))).click()
     driver.switch_to.frame(0)
 #this function is what actually enters the patients personal information into the form
-def EnterNewPatientPersnoal(patient):
+def EnterNewPatientPersonal(patient):
    CheckForPopups()
     if len(patient.PatientZipCode.strip()) == 4:
         patient.PatientZipCode = ("0" + patient.PatientZipCode)
@@ -259,10 +259,10 @@ def DeletePatient(patient):
         driver.find_element(By.XPATH, '/html/body/amds-root/div/amds-layout/mat-drawer-container/mat-drawer-content/amds-header-toolbar/mat-toolbar/div[1]/amds-patient-lookup-control/div/mat-form-field/div/div[1]/div[3]/button[1]').click()
         driver.switch_to.frame(0)
         return
-#This is the main function that gets the paitents information from an Excel Spreadsheet and the Enters that info into AdvancedMD
+#This is the main function that gets the patients information from an Excel Spreadsheet and then enters that info into AdvancedMD
 def EnterPatientsFromList(PatientListFileName, username, password, officeKey, IsEnteringForPatientPersonalData=True, SheetName='Sheet1', StartAt=2, IsClearingPatients=False):
     if IsClearingPatients:
-        LoginForPersnalData(username, password, officeKey)
+        LoginForPersonalData(username, password, officeKey)
         book = load_workbook(filename = str(PatientListFileName).strip())
         ws = book[SheetName]
         rows = ws.iter_rows(min_row=2, min_col=1, max_col=2)
@@ -273,7 +273,7 @@ def EnterPatientsFromList(PatientListFileName, username, password, officeKey, Is
             DeletePatient(FullName.value)
         driver.close()
     elif IsEnteringForPatientPersonalData:
-        LoginForPersnalData(username, password, officeKey)
+        LoginForPersonalData(username, password, officeKey)
         book = load_workbook(filename = str(PatientListFileName).strip())
         ws = book[SheetName]
         if IsInDebugMode:
@@ -282,7 +282,7 @@ def EnterPatientsFromList(PatientListFileName, username, password, officeKey, Is
             rows = ws.iter_rows(min_row=StartAt, min_col=1, max_col=15)
         for FullName, FirstName, LastName, StreetAddrs, City, State, ZipCode, PrimaryPhone, Email, Gender, DOB, AccountNumber, Provider, InsuranceID, Carrier in rows:
             NewPatient = Patient(FirstName.value, LastName.value, Gender.value, DOB.value, Email.value, PrimaryPhone.value, "(XXX) XXX-XXXX", StreetAddrs.value, ZipCode.value, "COMMERCIAL", InsuranceID.value, AccountNumber.value, Carrier.value)
-            EnterNewPatientPersnoal(NewPatient)
+            EnterNewPatientPersonal(NewPatient)
         driver.close()
     else:
         LoginForInsuranceData(username, password, officeKey)
